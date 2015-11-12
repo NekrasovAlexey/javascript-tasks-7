@@ -55,8 +55,7 @@ exports.init = function () {
     };
 
     String.prototype.checkHasWordsCount = function (count) {
-        var string = this.slice();
-        return string.trim().split(/\ +/).length == count;
+        return this.trim().split(/ +/).length == count;
     };
 
     function deleteProp(prop) {
