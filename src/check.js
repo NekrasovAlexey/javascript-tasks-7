@@ -11,6 +11,9 @@ exports.init = function () {
 
     Object.prototype.checkHasKeys = function (keys) {
         var hasKeys = Object.keys(this);
+        if (hasKeys.length != keys.length) {
+            return false;
+        }
         return hasKeys.every(function (key) {
             return keys.indexOf(key) > -1;
         });
@@ -19,17 +22,19 @@ exports.init = function () {
 
     Object.prototype.checkHasValues = function (values) {
         var keys = Object.keys(this);
-        return values.every(function (value) {
-            return keys.indexOf(value);
+        if (values.length != keys.length) {
+            return false;
+        }
+        return keys.every(function (value) {
+            return values.indexOf(value);
         });
     };
     deleteProp('checkHasValues');
-    //Function.prototype.checkHasValues = undefined;
 
     Object.prototype.checkContainsValues = function (values) {
         var keys = Object.keys(this);
-        return keys.every(function (key, thisArg) {
-            return values.indexOf(thisArg[key]);
+        return values.every(function (key, thisArg) {
+            return keys.indexOf(thisArg[key]);
         });
     };
     deleteProp('checkContainsValues');
@@ -42,11 +47,14 @@ exports.init = function () {
     };
 
     Object.prototype.checkHasValueType = function (key, type) {
-        var field = this[key];
-        //Не уверен, что все нужно,
-        // т.к. вроде все поддерживаемые типы должны проверяться по конструктору,
-        // но хуже не будет, я думаю
-        return field.constructor === type || field instanceof type || typeof field === type;
+        if (this.hasOwnProperty(key)) {
+            var field = this[key];
+            //Не уверен, что все нужно,
+            // т.к. вроде все поддерживаемые типы должны проверяться по конструктору,
+            // но хуже не будет, я думаю
+            return field.constructor === type || field instanceof type || typeof field === type;
+        }
+        console.log('Нет такого поля');
     };
     deleteProp('checkHasValueType');
 
